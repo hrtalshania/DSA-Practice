@@ -54,6 +54,23 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .difficulty-card.hard { border-left: 4px solid #e74c3c; }
 .difficulty-card strong { display: block; font-size: 18px; color: #2d3748; margin-bottom: 4px; }
 .difficulty-card span { color: #6c757d; font-size: 14px; }
+.problem-list { margin: 10px 0 0 0; padding: 0; list-style: none; }
+.problem-list li { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 6px; flex-wrap: wrap; }
+.problem-list li:hover { background: #eef0ff; }
+.problem-list input[type="checkbox"] { transform: scale(1.2); cursor: pointer; accent-color: #667eea; }
+.pnum { color: #6c757d; font-variant-numeric: tabular-nums; min-width: 40px; text-align: right; font-size: 14px; }
+.plink { color: #2d3748; text-decoration: none; font-weight: 500; flex: 1; min-width: 200px; }
+.plink:hover { color: #667eea; }
+.plink.solved { text-decoration: line-through; color: #a0aec0; }
+.badge-easy { color: #2c9c90; background: #e6fffa; padding: 2px 10px; border-radius: 10px; font-size: 12px; font-weight: 600; }
+.badge-medium { color: #d68910; background: #fef5e7; padding: 2px 10px; border-radius: 10px; font-size: 12px; font-weight: 600; }
+.badge-hard { color: #e74c3c; background: #fdecea; padding: 2px 10px; border-radius: 10px; font-size: 12px; font-weight: 600; }
+.ptag { color: #667eea; background: rgba(102, 126, 234, 0.1); padding: 2px 10px; border-radius: 10px; font-size: 12px; font-weight: 600; }
+.stretch { color: #e74c3c; font-size: 12px; font-weight: 600; }
+.topic-progress { margin-left: auto; background: #667eea; color: white; font-size: 12px; padding: 3px 12px; border-radius: 12px; font-weight: 600; }
+.focus-line { color: #4a5568; line-height: 1.7; margin-top: 8px; }
+.reset-btn { background: none; border: 1px solid #cbd5e0; color: #6c757d; padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; margin-left: 10px; }
+.reset-btn:hover { color: #e74c3c; border-color: #e74c3c; }
 @media (max-width: 768px) {
 .comparison { grid-template-columns: 1fr; }
 .difficulty-grid { grid-template-columns: 1fr; }
@@ -69,11 +86,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 </div>
 
 <div class="tabs">
-<button class="tab active" onclick="showTab('topics')">📚 Core Topics</button>
-<button class="tab" onclick="showTab('patterns')">🧩 Pattern Recognition</button>
-<button class="tab" onclick="showTab('mindset')">🧠 Mindset & Learning</button>
-<button class="tab" onclick="showTab('platforms')">💻 Practice Platforms</button>
-<button class="tab" onclick="showTab('ai-era')">🤖 DSA in AI Era</button>
+<button class="tab active" onclick="showTab('topics', this)">📚 Core Topics</button>
+<button class="tab" onclick="showTab('patterns', this)">🧩 Pattern Recognition</button>
+<button class="tab" onclick="showTab('mindset', this)">🧠 Mindset & Learning</button>
+<button class="tab" onclick="showTab('platforms', this)">💻 Practice Platforms</button>
+<button class="tab" onclick="showTab('ai-era', this)">🤖 DSA in AI Era</button>
+<button class="tab" onclick="showTab('problems', this)">📋 Problem List</button>
 </div>
 
 <div class="content" id="topics-content">
@@ -934,8 +952,188 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 </div>
 
+<div class="content" id="problems-content" style="display:none;">
+<div class="pattern topic-card">
+<h3><span class="icon">📋</span> LeetCode Problem List — Solve in This Order</h3>
+<p style="color: #4a5568; line-height: 1.7;">Pure LeetCode list, ordered for pattern recognition: within each topic go <strong>top → bottom</strong> (Easy → Medium → stretch Hard). Every problem teaches the pattern above it as a slight variation. Tick the checkbox when solved <em>and</em> reviewed — progress is saved in this browser.</p>
+<p style="font-weight: 600; color: #667eea; margin-top: 8px;">Overall: <span id="total-progress">0 / 0 done</span><button class="reset-btn" onclick="resetProgress()">Reset</button></p>
+</div>
+
+<div class="topic-card">
+<h3><span class="icon">🔢</span> Arrays & Hashing <span class="topic-progress">0/8</span></h3>
+<p class="focus-line">Goal: see "seen before" / "frequency" / "find pair" → reach for a hash map or set without thinking.</p>
+<ul class="problem-list">
+<li><input type="checkbox" data-id="217"><span class="pnum">217</span><a class="plink" href="https://leetcode.com/problems/contains-duplicate/" target="_blank">Contains Duplicate</a><span class="ptag">hash set</span><span class="badge-easy">Easy</span></li>
+<li><input type="checkbox" data-id="242"><span class="pnum">242</span><a class="plink" href="https://leetcode.com/problems/valid-anagram/" target="_blank">Valid Anagram</a><span class="ptag">frequency count</span><span class="badge-easy">Easy</span></li>
+<li><input type="checkbox" data-id="1"><span class="pnum">1</span><a class="plink" href="https://leetcode.com/problems/two-sum/" target="_blank">Two Sum</a><span class="ptag">hash map</span><span class="badge-easy">Easy</span></li>
+<li><input type="checkbox" data-id="49"><span class="pnum">49</span><a class="plink" href="https://leetcode.com/problems/group-anagrams/" target="_blank">Group Anagrams</a><span class="ptag">frequency key</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="347"><span class="pnum">347</span><a class="plink" href="https://leetcode.com/problems/top-k-frequent-elements/" target="_blank">Top K Frequent Elements</a><span class="ptag">count + heap</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="238"><span class="pnum">238</span><a class="plink" href="https://leetcode.com/problems/product-of-array-except-self/" target="_blank">Product of Array Except Self</a><span class="ptag">prefix/suffix</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="36"><span class="pnum">36</span><a class="plink" href="https://leetcode.com/problems/valid-sudoku/" target="_blank">Valid Sudoku</a><span class="ptag">hash set grid</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="128"><span class="pnum">128</span><a class="plink" href="https://leetcode.com/problems/longest-consecutive-sequence/" target="_blank">Longest Consecutive Sequence</a><span class="ptag">hash set</span><span class="badge-medium">Medium</span></li>
+</ul>
+</div>
+
+<div class="topic-card">
+<h3><span class="icon">👈👉</span> Two Pointers <span class="topic-progress">0/5</span></h3>
+<p class="focus-line">Goal: sorted array + pair/triplet search → pointers from both ends, shrink by comparison.</p>
+<ul class="problem-list">
+<li><input type="checkbox" data-id="125"><span class="pnum">125</span><a class="plink" href="https://leetcode.com/problems/valid-palindrome/" target="_blank">Valid Palindrome</a><span class="ptag">converging pointers</span><span class="badge-easy">Easy</span></li>
+<li><input type="checkbox" data-id="167"><span class="pnum">167</span><a class="plink" href="https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/" target="_blank">Two Sum II (Sorted Input)</a><span class="ptag">sorted pair</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="15"><span class="pnum">15</span><a class="plink" href="https://leetcode.com/problems/3sum/" target="_blank">3Sum</a><span class="ptag">sort + fix one</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="11"><span class="pnum">11</span><a class="plink" href="https://leetcode.com/problems/container-with-most-water/" target="_blank">Container With Most Water</a><span class="ptag">greedy shrink</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="42"><span class="pnum">42</span><a class="plink" href="https://leetcode.com/problems/trapping-rain-water/" target="_blank">Trapping Rain Water</a><span class="ptag">two pointers</span><span class="badge-hard">Hard</span><span class="stretch">stretch</span></li>
+</ul>
+</div>
+
+<div class="topic-card">
+<h3><span class="icon">🪟</span> Sliding Window <span class="topic-progress">0/4</span></h3>
+<p class="focus-line">Goal: contiguous subarray/substring question → grow window always, shrink when invalid.</p>
+<ul class="problem-list">
+<li><input type="checkbox" data-id="121"><span class="pnum">121</span><a class="plink" href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/" target="_blank">Best Time to Buy and Sell Stock</a><span class="ptag">min so far</span><span class="badge-easy">Easy</span></li>
+<li><input type="checkbox" data-id="3"><span class="pnum">3</span><a class="plink" href="https://leetcode.com/problems/longest-substring-without-repeating-characters/" target="_blank">Longest Substring Without Repeating Characters</a><span class="ptag">variable window</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="424"><span class="pnum">424</span><a class="plink" href="https://leetcode.com/problems/longest-repeating-character-replacement/" target="_blank">Longest Repeating Character Replacement</a><span class="ptag">window + counter</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="76"><span class="pnum">76</span><a class="plink" href="https://leetcode.com/problems/minimum-window-substring/" target="_blank">Minimum Window Substring</a><span class="ptag">shrink when valid</span><span class="badge-hard">Hard</span><span class="stretch">stretch</span></li>
+</ul>
+</div>
+
+<div class="topic-card">
+<h3><span class="icon">🥞</span> Stacks <span class="topic-progress">0/6</span></h3>
+<p class="focus-line">Goal: "most recent unmatched / nested" → stack; "next greater element" → monotonic stack.</p>
+<ul class="problem-list">
+<li><input type="checkbox" data-id="20"><span class="pnum">20</span><a class="plink" href="https://leetcode.com/problems/valid-parentheses/" target="_blank">Valid Parentheses</a><span class="ptag">matching</span><span class="badge-easy">Easy</span></li>
+<li><input type="checkbox" data-id="155"><span class="pnum">155</span><a class="plink" href="https://leetcode.com/problems/min-stack/" target="_blank">Min Stack</a><span class="ptag">design</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="150"><span class="pnum">150</span><a class="plink" href="https://leetcode.com/problems/evaluate-reverse-polish-notation/" target="_blank">Evaluate Reverse Polish Notation</a><span class="ptag">operand stack</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="739"><span class="pnum">739</span><a class="plink" href="https://leetcode.com/problems/daily-temperatures/" target="_blank">Daily Temperatures</a><span class="ptag">monotonic stack</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="22"><span class="pnum">22</span><a class="plink" href="https://leetcode.com/problems/generate-parentheses/" target="_blank">Generate Parentheses</a><span class="ptag">backtrack + stack state</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="84"><span class="pnum">84</span><a class="plink" href="https://leetcode.com/problems/largest-rectangle-in-histogram/" target="_blank">Largest Rectangle in Histogram</a><span class="ptag">monotonic increasing</span><span class="badge-hard">Hard</span><span class="stretch">stretch</span></li>
+</ul>
+</div>
+
+<div class="topic-card">
+<h3><span class="icon">🔍</span> Binary Search <span class="topic-progress">0/6</span></h3>
+<p class="focus-line">Goal: sorted input, O(log n) demanded, or monotonic answer space → binary search (even on the answer).</p>
+<ul class="problem-list">
+<li><input type="checkbox" data-id="704"><span class="pnum">704</span><a class="plink" href="https://leetcode.com/problems/binary-search/" target="_blank">Binary Search</a><span class="ptag">classic</span><span class="badge-easy">Easy</span></li>
+<li><input type="checkbox" data-id="74"><span class="pnum">74</span><a class="plink" href="https://leetcode.com/problems/search-a-2d-matrix/" target="_blank">Search a 2D Matrix</a><span class="ptag">flatten grid</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="875"><span class="pnum">875</span><a class="plink" href="https://leetcode.com/problems/koko-eating-bananas/" target="_blank">Koko Eating Bananas</a><span class="ptag">search on answer</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="153"><span class="pnum">153</span><a class="plink" href="https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/" target="_blank">Find Minimum in Rotated Sorted Array</a><span class="ptag">compare with right</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="33"><span class="pnum">33</span><a class="plink" href="https://leetcode.com/problems/search-in-rotated-sorted-array/" target="_blank">Search in Rotated Sorted Array</a><span class="ptag">sorted half</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="4"><span class="pnum">4</span><a class="plink" href="https://leetcode.com/problems/median-of-two-sorted-arrays/" target="_blank">Median of Two Sorted Arrays</a><span class="ptag">partition</span><span class="badge-hard">Hard</span><span class="stretch">stretch</span></li>
+</ul>
+</div>
+
+<div class="topic-card">
+<h3><span class="icon">🌲</span> Trees & BST <span class="topic-progress">0/12</span></h3>
+<p class="focus-line">Goal: path/depth/structure → DFS recursion; level by level → BFS queue; BST → inorder is sorted.</p>
+<ul class="problem-list">
+<li><input type="checkbox" data-id="226"><span class="pnum">226</span><a class="plink" href="https://leetcode.com/problems/invert-binary-tree/" target="_blank">Invert Binary Tree</a><span class="ptag">swap recursion</span><span class="badge-easy">Easy</span></li>
+<li><input type="checkbox" data-id="104"><span class="pnum">104</span><a class="plink" href="https://leetcode.com/problems/maximum-depth-of-binary-tree/" target="_blank">Maximum Depth of Binary Tree</a><span class="ptag">DFS depth</span><span class="badge-easy">Easy</span></li>
+<li><input type="checkbox" data-id="100"><span class="pnum">100</span><a class="plink" href="https://leetcode.com/problems/same-tree/" target="_blank">Same Tree</a><span class="ptag">pair recursion</span><span class="badge-easy">Easy</span></li>
+<li><input type="checkbox" data-id="543"><span class="pnum">543</span><a class="plink" href="https://leetcode.com/problems/diameter-of-binary-tree/" target="_blank">Diameter of Binary Tree</a><span class="ptag">height + path</span><span class="badge-easy">Easy</span></li>
+<li><input type="checkbox" data-id="572"><span class="pnum">572</span><a class="plink" href="https://leetcode.com/problems/subtree-of-another-tree/" target="_blank">Subtree of Another Tree</a><span class="ptag">reuse Same Tree</span><span class="badge-easy">Easy</span></li>
+<li><input type="checkbox" data-id="102"><span class="pnum">102</span><a class="plink" href="https://leetcode.com/problems/binary-tree-level-order-traversal/" target="_blank">Level Order Traversal</a><span class="ptag">BFS queue</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="199"><span class="pnum">199</span><a class="plink" href="https://leetcode.com/problems/binary-tree-right-side-view/" target="_blank">Right Side View</a><span class="ptag">last per level</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="235"><span class="pnum">235</span><a class="plink" href="https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/" target="_blank">LCA of a BST</a><span class="ptag">BST direction walk</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="230"><span class="pnum">230</span><a class="plink" href="https://leetcode.com/problems/kth-smallest-element-in-a-bst/" target="_blank">Kth Smallest in BST</a><span class="ptag">inorder</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="105"><span class="pnum">105</span><a class="plink" href="https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/" target="_blank">Construct Tree from Preorder + Inorder</a><span class="ptag">divide by root</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="124"><span class="pnum">124</span><a class="plink" href="https://leetcode.com/problems/binary-tree-maximum-path-sum/" target="_blank">Maximum Path Sum</a><span class="ptag">DFS return type</span><span class="badge-hard">Hard</span><span class="stretch">stretch</span></li>
+<li><input type="checkbox" data-id="297"><span class="pnum">297</span><a class="plink" href="https://leetcode.com/problems/serialize-and-deserialize-binary-tree/" target="_blank">Serialize and Deserialize Binary Tree</a><span class="ptag">preorder design</span><span class="badge-hard">Hard</span><span class="stretch">stretch</span></li>
+</ul>
+</div>
+
+<div class="topic-card">
+<h3><span class="icon">⏱️</span> Heaps & Priority Queues <span class="topic-progress">0/6</span></h3>
+<p class="focus-line">Goal: "top k / kth / most frequent" → heap of size k; streaming median → two heaps.</p>
+<ul class="problem-list">
+<li><input type="checkbox" data-id="703"><span class="pnum">703</span><a class="plink" href="https://leetcode.com/problems/kth-largest-element-in-a-stream/" target="_blank">Kth Largest in a Stream</a><span class="ptag">min heap size k</span><span class="badge-easy">Easy</span></li>
+<li><input type="checkbox" data-id="1046"><span class="pnum">1046</span><a class="plink" href="https://leetcode.com/problems/last-stone-weight/" target="_blank">Last Stone Weight</a><span class="ptag">max heap</span><span class="badge-easy">Easy</span></li>
+<li><input type="checkbox" data-id="215"><span class="pnum">215</span><a class="plink" href="https://leetcode.com/problems/kth-largest-element-in-an-array/" target="_blank">Kth Largest in an Array</a><span class="ptag">heap vs quickselect</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="973"><span class="pnum">973</span><a class="plink" href="https://leetcode.com/problems/k-closest-points-to-origin/" target="_blank">K Closest Points to Origin</a><span class="ptag">distance heap</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="621"><span class="pnum">621</span><a class="plink" href="https://leetcode.com/problems/task-scheduler/" target="_blank">Task Scheduler</a><span class="ptag">greedy + heap</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="295"><span class="pnum">295</span><a class="plink" href="https://leetcode.com/problems/find-median-from-data-stream/" target="_blank">Median from Data Stream</a><span class="ptag">two heaps</span><span class="badge-hard">Hard</span><span class="stretch">stretch</span></li>
+</ul>
+</div>
+
+<div class="topic-card">
+<h3><span class="icon">🔙</span> Backtracking <span class="topic-progress">0/8</span></h3>
+<p class="focus-line">Goal: "all combinations/permutations" → build choice by choice, undo (backtrack) after exploring.</p>
+<ul class="problem-list">
+<li><input type="checkbox" data-id="78"><span class="pnum">78</span><a class="plink" href="https://leetcode.com/problems/subsets/" target="_blank">Subsets</a><span class="ptag">include/exclude</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="39"><span class="pnum">39</span><a class="plink" href="https://leetcode.com/problems/combination-sum/" target="_blank">Combination Sum</a><span class="ptag">reuse allowed</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="46"><span class="pnum">46</span><a class="plink" href="https://leetcode.com/problems/permutations/" target="_blank">Permutations</a><span class="ptag">used tracking</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="90"><span class="pnum">90</span><a class="plink" href="https://leetcode.com/problems/subsets-ii/" target="_blank">Subsets II</a><span class="ptag">skip duplicates</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="17"><span class="pnum">17</span><a class="plink" href="https://leetcode.com/problems/letter-combinations-of-a-phone-number/" target="_blank">Letter Combinations of a Phone Number</a><span class="ptag">digit map</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="131"><span class="pnum">131</span><a class="plink" href="https://leetcode.com/problems/palindrome-partitioning/" target="_blank">Palindrome Partitioning</a><span class="ptag">partition + check</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="79"><span class="pnum">79</span><a class="plink" href="https://leetcode.com/problems/word-search/" target="_blank">Word Search</a><span class="ptag">grid + visited</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="51"><span class="pnum">51</span><a class="plink" href="https://leetcode.com/problems/n-queens/" target="_blank">N-Queens</a><span class="ptag">conflict sets</span><span class="badge-hard">Hard</span><span class="stretch">stretch</span></li>
+</ul>
+</div>
+
+<div class="topic-card">
+<h3><span class="icon">🔄</span> Graphs <span class="topic-progress">0/10</span></h3>
+<p class="focus-line">Goal: grid/network = graph. Explore all reachable → DFS/BFS; fewest steps → BFS; dependencies → topological sort.</p>
+<ul class="problem-list">
+<li><input type="checkbox" data-id="200"><span class="pnum">200</span><a class="plink" href="https://leetcode.com/problems/number-of-islands/" target="_blank">Number of Islands</a><span class="ptag">flood fill</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="695"><span class="pnum">695</span><a class="plink" href="https://leetcode.com/problems/max-area-of-island/" target="_blank">Max Area of Island</a><span class="ptag">flood fill count</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="994"><span class="pnum">994</span><a class="plink" href="https://leetcode.com/problems/rotting-oranges/" target="_blank">Rotting Oranges</a><span class="ptag">multi-source BFS</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="133"><span class="pnum">133</span><a class="plink" href="https://leetcode.com/problems/clone-graph/" target="_blank">Clone Graph</a><span class="ptag">DFS + visited map</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="207"><span class="pnum">207</span><a class="plink" href="https://leetcode.com/problems/course-schedule/" target="_blank">Course Schedule</a><span class="ptag">cycle / topo</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="210"><span class="pnum">210</span><a class="plink" href="https://leetcode.com/problems/course-schedule-ii/" target="_blank">Course Schedule II</a><span class="ptag">topo order</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="547"><span class="pnum">547</span><a class="plink" href="https://leetcode.com/problems/number-of-provinces/" target="_blank">Number of Provinces</a><span class="ptag">union find</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="684"><span class="pnum">684</span><a class="plink" href="https://leetcode.com/problems/redundant-connection/" target="_blank">Redundant Connection</a><span class="ptag">union find cycle</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="417"><span class="pnum">417</span><a class="plink" href="https://leetcode.com/problems/pacific-atlantic-water-flow/" target="_blank">Pacific Atlantic Water Flow</a><span class="ptag">reverse DFS</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="127"><span class="pnum">127</span><a class="plink" href="https://leetcode.com/problems/word-ladder/" target="_blank">Word Ladder</a><span class="ptag">BFS word graph</span><span class="badge-hard">Hard</span><span class="stretch">stretch</span></li>
+</ul>
+</div>
+
+<div class="topic-card">
+<h3><span class="icon">🔁</span> Dynamic Programming — 1D <span class="topic-progress">0/6</span></h3>
+<p class="focus-line">Goal: define dp[i] = best answer for prefix i, then decide take/skip for each element.</p>
+<ul class="problem-list">
+<li><input type="checkbox" data-id="70"><span class="pnum">70</span><a class="plink" href="https://leetcode.com/problems/climbing-stairs/" target="_blank">Climbing Stairs</a><span class="ptag">fibonacci</span><span class="badge-easy">Easy</span></li>
+<li><input type="checkbox" data-id="198"><span class="pnum">198</span><a class="plink" href="https://leetcode.com/problems/house-robber/" target="_blank">House Robber</a><span class="ptag">take/skip</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="213"><span class="pnum">213</span><a class="plink" href="https://leetcode.com/problems/house-robber-ii/" target="_blank">House Robber II</a><span class="ptag">circular split</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="322"><span class="pnum">322</span><a class="plink" href="https://leetcode.com/problems/coin-change/" target="_blank">Coin Change</a><span class="ptag">min coins</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="139"><span class="pnum">139</span><a class="plink" href="https://leetcode.com/problems/word-break/" target="_blank">Word Break</a><span class="ptag">boolean dp</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="300"><span class="pnum">300</span><a class="plink" href="https://leetcode.com/problems/longest-increasing-subsequence/" target="_blank">Longest Increasing Subsequence</a><span class="ptag">subsequence dp</span><span class="badge-medium">Medium</span></li>
+</ul>
+</div>
+
+<div class="topic-card">
+<h3><span class="icon">🧮</span> Dynamic Programming — 2D <span class="topic-progress">0/6</span></h3>
+<p class="focus-line">Goal: two sequences or two dimensions → dp[i][j]; usually built from dp[i-1][j], dp[i][j-1], dp[i-1][j-1].</p>
+<ul class="problem-list">
+<li><input type="checkbox" data-id="62"><span class="pnum">62</span><a class="plink" href="https://leetcode.com/problems/unique-paths/" target="_blank">Unique Paths</a><span class="ptag">grid paths</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="1143"><span class="pnum">1143</span><a class="plink" href="https://leetcode.com/problems/longest-common-subsequence/" target="_blank">Longest Common Subsequence</a><span class="ptag">match/skip</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="97"><span class="pnum">97</span><a class="plink" href="https://leetcode.com/problems/interleaving-string/" target="_blank">Interleaving String</a><span class="ptag">two-pointer dp</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="416"><span class="pnum">416</span><a class="plink" href="https://leetcode.com/problems/partition-equal-subset-sum/" target="_blank">Partition Equal Subset Sum</a><span class="ptag">0/1 knapsack</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="518"><span class="pnum">518</span><a class="plink" href="https://leetcode.com/problems/coin-change-ii/" target="_blank">Coin Change II</a><span class="ptag">count combos</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="5"><span class="pnum">5</span><a class="plink" href="https://leetcode.com/problems/longest-palindromic-substring/" target="_blank">Longest Palindromic Substring</a><span class="ptag">expand around center</span><span class="badge-medium">Medium</span></li>
+</ul>
+</div>
+
+<div class="topic-card">
+<h3><span class="icon">🧩</span> Bits & Tries <span class="topic-progress">0/8</span></h3>
+<p class="focus-line">Goal: XOR kills duplicates; tries = "many words, shared prefixes" (autocomplete, spell check).</p>
+<ul class="problem-list">
+<li><input type="checkbox" data-id="136"><span class="pnum">136</span><a class="plink" href="https://leetcode.com/problems/single-number/" target="_blank">Single Number</a><span class="ptag">xor cancel</span><span class="badge-easy">Easy</span></li>
+<li><input type="checkbox" data-id="191"><span class="pnum">191</span><a class="plink" href="https://leetcode.com/problems/number-of-1-bits/" target="_blank">Number of 1 Bits</a><span class="ptag">n &amp; (n-1)</span><span class="badge-easy">Easy</span></li>
+<li><input type="checkbox" data-id="338"><span class="pnum">338</span><a class="plink" href="https://leetcode.com/problems/counting-bits/" target="_blank">Counting Bits</a><span class="ptag">bit dp</span><span class="badge-easy">Easy</span></li>
+<li><input type="checkbox" data-id="268"><span class="pnum">268</span><a class="plink" href="https://leetcode.com/problems/missing-number/" target="_blank">Missing Number</a><span class="ptag">xor / index math</span><span class="badge-easy">Easy</span></li>
+<li><input type="checkbox" data-id="190"><span class="pnum">190</span><a class="plink" href="https://leetcode.com/problems/reverse-bits/" target="_blank">Reverse Bits</a><span class="ptag">bit shifts</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="208"><span class="pnum">208</span><a class="plink" href="https://leetcode.com/problems/implement-trie-prefix-tree/" target="_blank">Implement Trie (Prefix Tree)</a><span class="ptag">node children map</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="211"><span class="pnum">211</span><a class="plink" href="https://leetcode.com/problems/design-add-and-search-words-data-structure/" target="_blank">Add and Search Words Data Structure</a><span class="ptag">trie dfs wildcard</span><span class="badge-medium">Medium</span></li>
+<li><input type="checkbox" data-id="212"><span class="pnum">212</span><a class="plink" href="https://leetcode.com/problems/word-search-ii/" target="_blank">Word Search II</a><span class="ptag">trie + backtrack</span><span class="badge-hard">Hard</span><span class="stretch">stretch</span></li>
+</ul>
+</div>
+</div>
+
+</div>
+
 <script>
-function showTab(tabName) {
+function showTab(tabName, btn) {
+if (!btn) return;
 // Hide all content
 document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
 
@@ -944,8 +1142,48 @@ document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
 
 // Show selected content and activate tab
 document.getElementById(tabName + '-content').style.display = 'block';
-event.target.classList.add('active');
+btn.classList.add('active');
 }
+
+// --- Problem list progress (saved in localStorage) ---
+const PROGRESS_KEY = 'dsa-roadmap-progress';
+function loadProgress() {
+const done = new Set(JSON.parse(localStorage.getItem(PROGRESS_KEY) || '[]'));
+document.querySelectorAll('#problems-content input[type="checkbox"]').forEach(cb => {
+cb.checked = done.has(cb.dataset.id);
+cb.addEventListener('change', () => {
+// keep struck-through link in sync with the checkbox
+cb.parentElement.querySelector('.plink').classList.toggle('solved', cb.checked);
+saveProgress();
+});
+cb.parentElement.querySelector('.plink').classList.toggle('solved', cb.checked);
+});
+updateCounts();
+}
+function saveProgress() {
+const done = [...document.querySelectorAll('#problems-content input:checked')].map(cb => cb.dataset.id);
+localStorage.setItem(PROGRESS_KEY, JSON.stringify(done));
+updateCounts();
+}
+function updateCounts() {
+document.querySelectorAll('#problems-content .topic-card').forEach(card => {
+const boxes = card.querySelectorAll('input[type="checkbox"]');
+const checked = card.querySelectorAll('input:checked');
+const label = card.querySelector('.topic-progress');
+if (label && boxes.length) label.textContent = checked.length + '/' + boxes.length;
+});
+const all = document.querySelectorAll('#problems-content input[type="checkbox"]').length;
+const doneAll = document.querySelectorAll('#problems-content input:checked').length;
+const total = document.getElementById('total-progress');
+if (total) total.textContent = doneAll + ' / ' + all + ' done';
+}
+function resetProgress() {
+if (!confirm('Clear all problem checkmarks?')) return;
+localStorage.removeItem(PROGRESS_KEY);
+document.querySelectorAll('#problems-content input:checked').forEach(cb => cb.checked = false);
+updateCounts();
+}
+loadProgress();
 </script>
 
 </body>
